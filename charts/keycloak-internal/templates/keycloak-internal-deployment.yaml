@@ -31,6 +31,39 @@ spec:
       securityContext: {{- .Values.podSecurityContext | toYaml | nindent 8 }}
       {{- end }}
       initContainers:
+        - name: create-schema
+          image: {{ include "keycloak-internal.image" . }}
+          imagePullPolicy: {{ .Values.theme.image.pullPolicy }}
+          env:
+          - name: PGHOST
+            valueFrom:
+              secretKeyRef:
+                name: keycloak-internal-secret
+                key: database_host
+          - name: PGPORT
+            valueFrom:
+              secretKeyRef:
+                name: keycloak-internal-secret
+                key: database_port
+          - name: PGDATABASE
+            valueFrom:
+              secretKeyRef:
+                name: keycloak-internal-secret
+                key: database_name
+          - name: PGUSER
+            valueFrom:
+              secretKeyRef:
+                name: keycloak-internal-secret
+                key: database_user
+          - name: PGPASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: keycloak-internal-secret
+                key: database_password
+          command:
+            - "psql"
+            - "-c"
+            - "CREATE SCHEMA IF NOT EXISTS {{ .Values.keycloak.dbSchema }};"
         - name: init-theme
           image: {{ include "keycloak-internal.theme.image" . }}
           imagePullPolicy: {{ .Values.theme.image.pullPolicy }}
@@ -83,12 +116,12 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: keycloak-internal-secret
-                  key: dbUsername
+                  key: database_user
             - name: KC_DB_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: keycloak-internal-secret
-                  key: dbPassword
+                  key: database_password
             - name: KC_LOG_LEVEL
               value: {{ .Values.logging.level | quote }}
             {{- if $additionalEnv }}
