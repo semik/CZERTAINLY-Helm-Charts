@@ -5,3 +5,147 @@ metadata:
 data:
   {{- include "czertainly-lib.api-gateway.kong.yaml" (dict "global" .Values.global "apiGateway" .Values.apiGateway) | indent 2 }}
   {{- include "czertainly-lib.messaging.configmap" (dict "global" .Values.global "messagingService" .Values.messagingService) | nindent 2 }}
+  statusServiceConfig: |-
+    metrics: true
+    ui:
+      title: CZERTAINLY Health Status
+      header: CZERTAINLY Health Status
+      link: https://www.czertainly.com/
+      logo: "https://czertainly.doma.tomasek.cz/administrator/static/media/czertainly_logo.852ee710a787675b510028e50ec09273.svg"
+      base: "https://czertainly.doma.tomasek.cz/status/"
+    endpoints:
+    # -- group core -----------------------------------------------------------
+    - name: Core
+      group: core
+      url: http://core-service:8080/api/v1/health/readiness
+      interval: 5m
+      conditions:
+        - "[BODY].status == UP"
+
+    - name: Auth Deployment
+      group: core
+      url: http://auth-service:8080/health
+      interval: 5m
+      conditions:
+        - "[BODY] == Healthy"
+
+    - name: Auth OPA Policies
+      group: core
+      url: http://auth-opa-policies-service:8080/index.html
+      interval: 5m
+      conditions:
+        - "[STATUS] == 200"
+
+    - name: Frontend
+      group: core
+      url: http://fe-administrator-service:8080/
+      interval: 5m
+      conditions:
+        - "[STATUS] == 200"
+
+    {{- if .Values.global.keycloak.enabled }}
+    - name: Keycloak
+      group: core
+      url: http://keycloak-internal-service:8080/kc/realms/master
+      interval: 5m
+      conditions:
+        - "[STATUS] == 200"
+    {{- end }}
+
+    - name: Scheduler Service
+      group: core
+      url: http://scheduler-service-service:8080/health/readiness
+      interval: 5m
+      conditions:
+        - "[BODY].status == UP"
+
+    {{- if .Values.global.utils.enabled }}
+    - name: Utils Service
+      group: core
+      url: http://scheduler-service-service:8080/health/readiness
+      interval: 5m
+      conditions:
+        - "[BODY].status == UP"
+    {{- end }}
+
+    # -- group providers ------------------------------------------------------
+    {{- if .Values.commonCredentialProvider.enabled }}
+    - name: Common-Credential-Connector
+      group:  providers
+      url: http://common-credential-provider-service:8080/v1/health
+      interval: 5m
+      conditions:
+        - "[BODY].status == ok"
+    {{ end }}
+
+    {{- if .Values.cryptosenseDiscoveryProvider.enabled }}
+    - name: Cryptosense-Discovery-Provider
+      group:  providers
+      url: http://cryptosense-discovery-provider-service:8080/v1/health
+      interval: 5m
+      conditions:
+        - "[BODY].status == ok"
+    {{- end }}
+
+    {{- if .Values.ejbcaNgConnector.enabled }}
+    - name: EJBCA-NG-Connector
+      group:  providers
+      url: http://ejbca-ng-connector-service:8080/v1/health
+      interval: 5m
+      conditions:
+        - "[BODY].status == ok"
+    {{- end }}
+
+    {{- if .Values.emailNotificationProvider.enabled }}
+    - name: Email-Notification-Provider
+      group:  providers
+      url: http://email-notification-provider-service:8080/v1/health
+      interval: 5m
+      conditions:
+        - "[BODY].status == ok"
+    {{- end }}
+
+    {{- if .Values.keystoreEntityProvider.enabled }}
+    - name: Keystore-Entity-Provider
+      group:  providers
+      url: http://keystore-entity-provider-service:8080/v1/health
+      interval: 5m
+      conditions:
+        - "[BODY].status == ok"
+    {{- end }}
+
+    {{- if .Values.networkDiscoveryProvider.enabled }}
+    - name: Network-Discovery-Provider
+      group:  providers
+      url: http://network-discovery-provider-service:8080/v1/health
+      interval: 5m
+      conditions:
+        - "[BODY].status == ok"
+    {{- end }}
+
+    {{- if .Values.pyAdcsConnector.enabled }}
+    - name: PyADCS-Connector
+      group:  providers
+      url: http://pyadcs-connector-service:8080/v1/health
+      interval: 5m
+      conditions:
+        - "[BODY].status == ok"
+    {{- end }}
+
+    {{- if .Values.softwareCryptographyProvider.enabled }}
+    - name: Software-Cryptography-Provider
+      group:  providers
+      url: http://software-cryptography-provider-service:8080/v1/health
+      interval: 5m
+      conditions:
+        - "[BODY].status == ok"
+    {{- end }}
+
+    {{- if .Values.x509ComplianceProvider.enabled }}
+    - name: X509-Compliance-Provider
+      group:  providers
+      url: http://x509-compliance-provider-service:8080/v1/health
+      interval: 5m
+      conditions:
+        - "[BODY].status == ok"
+    {{- end }}

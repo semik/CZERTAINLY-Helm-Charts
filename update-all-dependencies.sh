@@ -57,6 +57,9 @@ helm dependency update charts/scheduler-service --skip-refresh
 echo "Updating dependencies for software-cryptography-provider..."
 helm dependency update charts/software-cryptography-provider --skip-refresh
 
+echo "Updating dependencies for status-service..."
+helm dependency update charts/status-service --skip-refresh
+
 echo "Updating dependencies for utils-service..."
 helm dependency update charts/utils-service --skip-refresh
 

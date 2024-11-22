@@ -188,6 +188,17 @@ kong.yml: |-
           paths:
             - /mq
     {{- end }}
+    {{- if or .global.status.enabled }}
+    - name: status-service-service
+      host: status-service-service
+      port: 8080
+      routes:
+        - name: status-service-route
+          strip_path: true
+          preserve_host: true
+          paths:
+            - /status
+    {{- end }}
     {{- if or .global.utils.enabled }}
     - name: utils-service-service
       host: utils-service-service

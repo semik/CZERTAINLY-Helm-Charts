@@ -114,6 +114,14 @@ dependencies:
       - utils-service
     version: 1.0.0-5
     alias: utilsService
+  - condition: global.status.enabled
+    name: status-service
+    # repository: oci://harbor.3key.company/czertainly-helm
+    repository: file://../status-service
+    tags:
+      - status-service
+    version: 1.0.0-0-develop
+    alias: statusService
   # the following are mandatory dependencies
   - name: czertainly-lib
     # repository: oci://harbor.3key.company/czertainly-helm

@@ -39,6 +39,8 @@ global:
     remoteAccess: false
   utils:
     enabled: false
+  status:
+    enabled: false
   admin:
     username: ""
     password: ""
@@ -549,3 +551,7 @@ keycloakInternal:
 utilsService:
   nameOverride: utils-service
   # the enabled flag is defined as global.utils.enabled
+
+statusService:
+  nameOverride: status-service
+  # the enabled flag is defined as global.status.enabled
