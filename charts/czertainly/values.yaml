@@ -194,7 +194,7 @@ image:
   registry: docker.io
   repository: czertainly
   name: czertainly-core
-  tag: 2.13.1
+  tag: 2.14.0
   # the digest to be used instead of the tag
   digest: ""
   pullPolicy: IfNotPresent
@@ -376,15 +376,12 @@ additionalEnv:
 
 logging:
   level: "INFO"
-  audit:
-    enabled: "false"
 
 javaOpts: ""
 
 auth:
   header:
-    token: "X-USERINFO"
-    certificate: "X-APP-CERTIFICATE"
+    certificate: "ssl-client-cert"
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -453,6 +450,8 @@ affinity: {}
 #
 apiGateway:
   nameOverride: api-gateway
+  config:
+    default: "charts/api-gateway-kong/config/kong.yml"
   autoscaling:
     enabled: false
     minReplicas: 1
