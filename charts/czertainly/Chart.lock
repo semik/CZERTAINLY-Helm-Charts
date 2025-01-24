@@ -38,6 +38,9 @@ dependencies:
 - name: utils-service
   repository: file://../utils-service
   version: 1.0.0-6
+- name: status-service
+  repository: file://../status-service
+  version: 1.0.0-0-develop
 - name: czertainly-lib
   repository: file://../czertainly-lib
   version: 1.4.1
@@ -59,5 +62,5 @@ dependencies:
 - name: scheduler-service
   repository: file://../scheduler-service
   version: 1.0.1-2
-digest: sha256:520a43f24c1a736781cc25edcde2d6208c1d7a1904ddb543a17c0630bec5d224
-generated: "2024-12-20T16:45:31.343507+01:00"
+digest: sha256:46b25e9da282dbab41f8d489728e9b42c6a0603ed6f61e12479006ab82e2ada9
+generated: "2025-01-20T12:58:55.729672316+01:00"
